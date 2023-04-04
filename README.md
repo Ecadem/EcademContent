@@ -2,7 +2,7 @@
 
 <img src="https://user-images.githubusercontent.com/62354692/209298221-2cf465d6-9127-4f10-a4e4-b55b28d228ab.png" alt="drawing" width="600"/>
 
-# <nombre_proyecto>
+# ecademcontent
 
 #### Esta API se encuentra desarrollada en python y su framework FastAPI.
 Para hacer uso en local se debe contar con al menos una de las siguientes dos tecnologias:
@@ -17,8 +17,8 @@ En la raiz de proyecto dirigirse a la carpeta `./app` y seguir los siguientes pa
 
 ### Con docker
 En la raiz de proyecto dirigirse a la carpeta `./app` y seguir los siguientes pasos:
-1. `docker build -t <nombre_proyecto> .`
-2. `docker run -p 8000:80 <nombre_proyecto>`
+1. `docker build -t ecademcontent .`
+2. `docker run -p 8000:80 ecademcontent`
 3. En el explorador web ingresar a la url `http://localhost:8000/docs`
 
 *Nota: tener en cuenta ejecutar solo una de las dos opciones*
