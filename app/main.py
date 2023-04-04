@@ -19,7 +19,7 @@ middleware = [
 app = FastAPI(
     title="Ecadem Content",
     description="Esta API te permite acceder a todo el contenido de la pagina Ecadem.co posts, imagenes, proyectos, etc.",
-    version = 1.0",
+    version = "1.0",
     openapi_url="/openapi.json", 
     docs_url="/docs",
     middleware=middleware
@@ -29,4 +29,4 @@ app.include_router(router)
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, port=8000, host='0.0.0.0')
+    uvicorn.run(app, port=80, host='0.0.0.0')
