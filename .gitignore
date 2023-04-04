@@ -1,1 +1,3 @@
 app/config/prod.env
+app/fly.toml
+app/src/querys
