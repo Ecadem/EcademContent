@@ -21,11 +21,14 @@ def get_response( query, cols, conn, recent = None ):
             items = results.fetch_row(maxrows=0)
             if recent:
                 
-                df = pd.DataFrame(items, columns = cols).head(3)
+                df = pd.DataFrame(items, columns = cols)
+                df["last_update"] = df["last_update"].str.decode("utf-8")
+                df["last_update"] = pd.to_datetime(df["last_update"], dayfirst=True)
+                df = df.sort_values(by="last_update", ascending=False).head(3)
             else:
                 df = df = pd.DataFrame(items, columns = cols)
 
-            return json.loads(df.to_json(orient="records")), conn
+            return json.loads(df.to_json(orient="records",date_format='iso')), conn
         except:
 
             print("Entro a error")
