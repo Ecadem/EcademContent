@@ -25,10 +25,12 @@ def get_response( query, cols, conn, recent = None ):
                 df["last_update"] = df["last_update"].str.decode("utf-8")
                 df["last_update"] = pd.to_datetime(df["last_update"], dayfirst=True)
                 df = df.sort_values(by="last_update", ascending=False).head(3)
+                df["last_update"] = df["last_update"].dt.strftime("%d-%b-%Y")
+                df["last_update"] = df["last_update"].str.encode("utf-8")
             else:
                 df = df = pd.DataFrame(items, columns = cols)
 
-            return json.loads(df.to_json(orient="records",date_format='iso')), conn
+            return json.loads(df.to_json(orient="records")), conn
         except:
 
             print("Entro a error")
