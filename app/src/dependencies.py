@@ -30,7 +30,7 @@ def get_response( query, cols, conn, recent = None ):
             elif recent and "last_update" not in cols:
                 df = pd.DataFrame(items, columns = cols).head(3)
             else:
-                df = df = pd.DataFrame(items, columns = cols)
+                df = pd.DataFrame(items, columns = cols)
 
             return json.loads(df.to_json(orient="records")), conn
         except:
