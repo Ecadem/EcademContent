@@ -1,70 +1,64 @@
-import pandas as pd
 import json
-from time import sleep
+from datetime import datetime
 
-from .settings import (
-    get_connection,
-)
+from src.db.mongodb import DatabaseObj
 
-from .querys.querys import (
-    SELECT_TAGS,
-)
+db = DatabaseObj()
 
-
-def get_response( query, cols, conn, recent = None ):
-    n_trys = 0
+def get_response(collection: str, recent: bool = None, n_firsts: int = 3) -> list:
+    data = db.get_collection(collection)
     
-    while n_trys < 4:
-        try:
-            conn.query(query)
-            results = conn.store_result()
-            items = results.fetch_row(maxrows=0)
-            if recent and "last_update" in cols:
-                
-                df = pd.DataFrame(items, columns = cols)
-                df["last_update"] = df["last_update"].str.decode("utf-8")
-                df["last_update"] = pd.to_datetime(df["last_update"], dayfirst=True)
-                df = df.sort_values(by="last_update", ascending=False).head(3)
-                df["last_update"] = df["last_update"].dt.strftime("%d-%b-%Y")
-                # df["last_update"] = df["last_update"].str.encode("utf-8")
-            elif recent and "last_update" not in cols:
-                df = pd.DataFrame(items, columns = cols).head(3)
-            else:
-                df = pd.DataFrame(items, columns = cols)
-
-            return json.loads(df.to_json(orient="records")), conn
-        except:
-
-            print("Entro a error")
-            conn = get_connection()
-            n_trys += 1
-            sleep(2)
-            continue
-
-
-def add_tags( data, conn ):
+    if data[0].get("last_update"):
+        data = sorted(data, key = lambda x: datetime.strptime(x["last_update"], "%d-%m-%Y"))
     
-    columns = [
-        "ID",
-        "name",
-        "class",
-        "style",
-    ]
+    if recent:
+        return data[:n_firsts]
+    
+    return data
 
-    tags, conn =  get_response( SELECT_TAGS, 
-                          columns, 
-                          conn, 
-                          recent = False 
-                        )    
+def add_tags(data: list) -> list:
+    tags = sorted(get_response("tags"), key = lambda x: x["tag_id"])
+    
+    for proj in data:    
+        pj_tags = proj["tags"]
 
-    for data_point in data:
-        tags_list = []
-        tags_needed = data_point["tags"].split(",")
+        for i, tag in enumerate(pj_tags):
+            pj_tags[i] = tags[tag - 1]
 
-        for tag in tags:
-            if tag["ID"] in tags_needed:
-                tags_list.append(tag)
+    return data
+
+
+
+
+
+
+
+
         
-        data_point["tags"] = tags_list
+            
 
-    return data,  conn
+
+#     columns = [
+#         "ID",
+#         "name",
+#         "class",
+#         "style",
+#     ]
+
+#     tags, conn =  get_response( SELECT_TAGS, 
+#                           columns, 
+#                           conn, 
+#                           recent = False 
+#                         )    
+
+#     for data_point in data:
+#         tags_list = []
+#         tags_needed = data_point["tags"].split(",")
+
+#         for tag in tags:
+#             if tag["ID"] in tags_needed:
+#                 tags_list.append(tag)
+        
+#         data_point["tags"] = tags_list
+
+#     return data,  conn

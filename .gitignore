@@ -1,3 +1,7 @@
-app/config/prod.env
+app/config/
 app/fly.toml
 app/src/querys
+.devcontainer/
+.github/
+
+

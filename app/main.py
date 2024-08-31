@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
-from src.routers import router
+from src.routers.routers import router as index
+from src.routers.content import router as content
 
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware import Middleware
@@ -15,17 +16,22 @@ middleware = [
     )
 ]
 
-
 app = FastAPI(
     title="Ecadem Content",
-    description="Esta API te permite acceder a todo el contenido de la pagina Ecadem.co posts, imagenes, proyectos, etc.",
-    version = "1.0",
+    description="This API allows you to access all the content of the Ecadem.co website, including posts, images, projects, etc.",
+    version="1.0",
     openapi_url="/openapi.json", 
     docs_url="/docs",
     middleware=middleware
 )
 
-app.include_router(router)
+routers = [
+    index,
+    content
+]
+
+for rout in routers:
+    app.include_router(rout)
 
 if __name__ == '__main__':
     import uvicorn

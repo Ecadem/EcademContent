@@ -1,4 +1,4 @@
-FROM python:3.10.9-buster
+FROM python:3.12.5
 
 WORKDIR /app
 RUN apt-get update

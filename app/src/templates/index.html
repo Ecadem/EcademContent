@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>API de ecadem</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        html,
+        body {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 50px;
+        }
+
+        img {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 24px;
+            margin-bottom: 50px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            margin: 0 10px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+            width: 200px;
+        }
+
+        .btn i {
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            background-color: #0056b3;
+        }
+
+
+
+        .docs-section {
+            margin-top: 40px;
+            text-align: center;
+            display: none;
+        }
+
+        .docs-section h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .docs-section p {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .docs-section code {
+            background-color: #f2f2f2;
+            border-radius: 4px;
+            font-family: monospace;
+            padding: 2px 6px;
+        }
+
+        .toggle-container {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .toggle-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid #000;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 18px;
+            }
+
+            .btn {
+                font-size: 16px;
+                margin-bottom: 10px;
+                width: 150px;
+            }
+        }
+
+        /* Estilos del modo oscuro */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .dark-mode .btn {
+            color: #fff;
+            background-color: #444;
+        }
+
+        .dark-mode .btn-primary {
+            background-color: #0056b3;
+        }
+
+        .dark-mode .btn-secondary {
+            background-color: #333;
+        }
+
+        .dark-mode .btn-primary:hover,
+        .dark-mode .btn-secondary:hover {
+            background-color: #1a73e8;
+        }
+
+        .dark-mode .toggle-button {
+            background-color: #333;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+
+        .dark-mode .docs-section code {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .toggle-dark-mode {
+            padding: 10px;
+            font-size: 18px;
+            background-color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-dark-mode:hover {
+            background-color: #f0f0f0;
+        }
+
+        .dark-mode .toggle-dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        #language-select {
+            padding: 5px 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+            background-color: #fff;
+            /* Fondo blanco por defecto */
+            color: #000;
+            /* Texto negro por defecto */
+        }
+
+        #language-select:hover {
+            border-color: #007bff;
+        }
+
+        /* Estilo del selector de idioma en modo oscuro */
+        .dark-mode #language-select {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+        }
+
+        .dark-mode #language-select:hover {
+            border-color: #1a73e8;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Botón de modo oscuro con icono y selector de idioma, ambos en la esquina superior derecha -->
+    <div style="position: fixed; top: 20px; right: 20px; display: flex; align-items: center; gap: 15px;">
+        <button class="toggle-dark-mode">
+            <i class="fas fa-moon"></i>
+        </button>
+        <select id="language-select">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+        </select>
+    </div>
+
+    <div class="container">
+        <img id="logo-image" src="https://i.imgur.com/kJ00MaT.png" alt="Logo de ecadem" class="img-fluid">
+        <h1 id="welcome-message" class="mt-5">Bienvenido a la API de ecadem</h1>
+        <p id="invite-message">Te invitamos a utilizar nuestra API y visitar nuestra página y repositorio en GitHub</p>
+        <div class="mt-5">
+            <a href="https://ecadem.co" target="_blank" class="btn btn-primary"><i class="fas fa-globe"></i>Web</a>
+            <a href="https://github.com/Ecadem" target="_blank" class="btn btn-secondary"><i
+                    class="fab fa-github"></i>GitHub</a>
+        </div>
+
+        <div class="toggle-container">
+            <button class="toggle-button">docs?</button>
+        </div>
+
+        <div class="docs-section">
+            <h2 id="docs-title">Cómo acceder a los docs de una API desarrollada en FastAPI</h2>
+            <p id="docs-instructions">
+                FastAPI genera automáticamente una documentación Swagger y OpenAPI para tu API web.
+                Puedes acceder a ella desde tu navegador web en la siguiente URL:
+            </p>
+            <p>
+                <code id="docs-url">http://localhost:8000/docs</code>
+            </p>
+            <p id="docs-replace">
+                Reemplaza <code>http://localhost:8000</code> con la URL de tu servidor FastAPI.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                welcomeMessage: "Welcome to the ecadem API",
+                inviteMessage: "We invite you to use our API and visit our website and GitHub repository",
+                docsTitle: "How to access the docs of an API developed in FastAPI",
+                docsInstructions: "FastAPI automatically generates Swagger and OpenAPI documentation for your web API. You can access it from your web browser at the following URL:",
+                docsUrl: "http://localhost:8000/docs",
+                docsReplace: "Replace <code>http://localhost:8000</code> with the URL of your FastAPI server."
+            },
+            es: {
+                welcomeMessage: "Bienvenido a la API de ecadem",
+                inviteMessage: "Te invitamos a utilizar nuestra API y visitar nuestra página y repositorio en GitHub",
+                docsTitle: "Cómo acceder a los docs de una API desarrollada en FastAPI",
+                docsInstructions: "FastAPI genera automáticamente una documentación Swagger y OpenAPI para tu API web. Puedes acceder a ella desde tu navegador web en la siguiente URL:",
+                docsUrl: "http://localhost:8000/docs",
+                docsReplace: "Reemplaza <code>http://localhost:8000</code> con la URL de tu servidor FastAPI."
+            },
+            fr: {
+                welcomeMessage: "Bienvenue sur l'API d'écadem",
+                inviteMessage: "Nous vous invitons à utiliser notre API et à visiter notre site web et notre dépôt GitHub",
+                docsTitle: "Comment accéder aux docs d'une API développée avec FastAPI",
+                docsInstructions: "FastAPI génère automatiquement une documentation Swagger et OpenAPI pour votre API web. Vous pouvez y accéder depuis votre navigateur web à l'URL suivante :",
+                docsUrl: "http://localhost:8000/docs",
+                docsReplace: "Remplacez <code>http://localhost:8000</code> par l'URL de votre serveur FastAPI."
+            }
+        };
+
+
+        // Obtener elementos del DOM para cambiar el contenido
+        const welcomeMessage = document.getElementById('welcome-message');
+        const inviteMessage = document.getElementById('invite-message');
+        const docsTitle = document.getElementById('docs-title');
+        const docsInstructions = document.getElementById('docs-instructions');
+        const docsUrl = document.getElementById('docs-url');
+        const docsReplace = document.getElementById('docs-replace');
+        const languageSelect = document.getElementById('language-select');
+
+        // Función para cambiar el idioma
+        function changeLanguage(language) {
+            welcomeMessage.innerHTML = translations[language].welcomeMessage;
+            inviteMessage.innerHTML = translations[language].inviteMessage;
+            docsTitle.innerHTML = translations[language].docsTitle;
+            docsInstructions.innerHTML = translations[language].docsInstructions;
+            docsUrl.innerHTML = translations[language].docsUrl;
+            docsReplace.innerHTML = translations[language].docsReplace;
+        }
+
+        // Event listener para el cambio de idioma
+        languageSelect.addEventListener('change', (event) => {
+            changeLanguage(event.target.value);
+        });
+
+        // JavaScript para alternar la visibilidad de la sección de documentación
+        const docsSection = document.querySelector('.docs-section');
+        const toggleButton = document.querySelector('.toggle-button');
+        const logoImage = document.getElementById('logo-image'); // Obtener la imagen del logo
+
+        toggleButton.addEventListener('click', () => {
+            docsSection.style.display = docsSection.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // JavaScript para el modo oscuro
+        const toggleDarkModeButton = document.querySelector('.toggle-dark-mode');
+        const bodyElement = document.body;
+        const darkModeIcon = toggleDarkModeButton.querySelector('i');
+
+        toggleDarkModeButton.addEventListener('click', () => {
+            bodyElement.classList.toggle('dark-mode');
+            if (bodyElement.classList.contains('dark-mode')) {
+                darkModeIcon.classList.remove('fa-moon');
+                darkModeIcon.classList.add('fa-sun');
+                // Cambiar la imagen del logo a la versión del modo oscuro
+                logoImage.src = "https://i.imgur.com/LP673b0.png";
+            } else {
+                darkModeIcon.classList.remove('fa-sun');
+                darkModeIcon.classList.add('fa-moon');
+                // Volver a la imagen del logo original en modo claro
+                logoImage.src = "https://i.imgur.com/kJ00MaT.png";
+            }
+        });
+    </script>
+</body>
+
+</html>
